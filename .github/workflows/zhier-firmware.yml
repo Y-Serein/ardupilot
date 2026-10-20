@@ -1,0 +1,73 @@
+name: ZHIER firmware
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - '**/*.md'
+      - '.github/ISSUE_TEMPLATE/**'
+  pull_request:
+    branches: [main]
+    paths-ignore:
+      - '**/*.md'
+      - '.github/ISSUE_TEMPLATE/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: zhier-firmware-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  firmware:
+    name: ZHIER firmware and bootloader
+    runs-on: ubuntu-22.04
+    timeout-minutes: 45
+    container: ardupilot/ardupilot-dev-chibios:v0.1.3
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Check out source and pinned submodules
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          submodules: recursive
+          persist-credentials: false
+
+      - name: Configure compiler
+        run: |
+          echo '/opt/gcc-arm-none-eabi-10/bin' >> "$GITHUB_PATH"
+
+      - name: Build ZHIER firmware
+        run: |
+          python3 waf configure --board ZHIER --out=build/firmware --no-submodule-update --disable-tests --default-parameters=libraries/AP_HAL_ChibiOS/hwdef/ZHIER/defaults.parm
+          python3 waf copter
+
+      - name: Build ZHIER bootloader
+        run: |
+          python3 waf configure --board ZHIER --bootloader --out=build/bootloader --no-submodule-update --disable-tests
+          python3 waf bootloader
+
+      - name: Check outputs and record provenance
+        run: |
+          test -s build/firmware/ZHIER/bin/arducopter.bin
+          test -s build/bootloader/ZHIER/bin/AP_Bootloader.bin
+          {
+            printf 'Commit: %s\n' "$GITHUB_SHA"
+            printf 'Run: %s/%s/actions/runs/%s\n' "$GITHUB_SERVER_URL" "$GITHUB_REPOSITORY" "$GITHUB_RUN_ID"
+            arm-none-eabi-gcc --version | head -n 1
+            git submodule status --recursive
+            sha256sum build/firmware/ZHIER/bin/arducopter.bin build/bootloader/ZHIER/bin/AP_Bootloader.bin
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Save the two ZHIER binaries for 30 days
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: ZHIER-${{ github.sha }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            build/firmware/ZHIER/bin/arducopter.bin
+            build/bootloader/ZHIER/bin/AP_Bootloader.bin
+          if-no-files-found: error
+          retention-days: 30

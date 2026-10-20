@@ -1,96 +1,6 @@
 name: test unit tests and sitl building
 
 on:
-  push:
-    paths-ignore:
-      # Remove markdown files as irrelevant
-      - '**.md'
-      # Remove dotfile at root directory
-      - './.dir-locals.el'
-      - './.dockerignore'
-      - './.editorconfig'
-      - './.gitattributes'
-      - './.github'
-      - './.gitignore'
-      - './.valgrind-suppressions'
-      - './.valgrindrc'
-      - 'Dockerfile'
-      - 'Vagrantfile'
-      - 'Makefile'
-      # Remove some directories check
-      - '.vscode/**'
-      - '.github/ISSUE_TEMPLATE/**'
-      # Remove generic tools
-      - 'Tools/CHDK-Script/**'
-      - 'Tools/CodeStyle/**'
-      - 'Tools/completion/**'
-      - 'Tools/CPUInfo/**'
-      - 'Tools/debug/**'
-      - 'Tools/environment_install/**'
-      - 'Tools/FilterTestTool/**'
-      - 'Tools/geotag/**'
-      - 'Tools/GIT_Test/**'
-      - 'Tools/gittools/**'
-      - 'Tools/Hello/**'
-      - 'Tools/Linux_HAL_Essentials/**'
-      - 'Tools/LogAnalyzer/**'
-      - 'Tools/mavproxy_modules/**'
-      - 'Tools/Pozyx/**'
-      - 'Tools/PrintVersion.py'
-      - 'Tools/simulink/**'
-      - 'Tools/UDP_Proxy/**'
-      - 'Tools/vagrant/**'
-      - 'Tools/Vicon/**'
-      # remove non SITL HAL
-      - 'libraries/AP_HAL_ChibiOS/**'
-      - 'libraries/AP_HAL_ESP32/**'
-      # Remove change on other workflows
-      - '.github/workflows/test_environment.yml'
-  pull_request:
-    paths-ignore:
-      # Remove markdown files as irrelevant
-      - '**.md'
-      # Remove dotfile at root directory
-      - './.dir-locals.el'
-      - './.dockerignore'
-      - './.editorconfig'
-      - './.gitattributes'
-      - './.github'
-      - './.gitignore'
-      - './.valgrind-suppressions'
-      - './.valgrindrc'
-      - 'Dockerfile'
-      - 'Vagrantfile'
-      - 'Makefile'
-      # Remove some directories check
-      - '.vscode/**'
-      - '.github/ISSUE_TEMPLATE/**'
-      # Remove generic tools
-      - 'Tools/CHDK-Script/**'
-      - 'Tools/CPUInfo/**'
-      - 'Tools/CodeStyle/**'
-      - 'Tools/FilterTestTool/**'
-      - 'Tools/GIT_Test/**'
-      - 'Tools/Hello/**'
-      - 'Tools/Linux_HAL_Essentials/**'
-      - 'Tools/LogAnalyzer/**'
-      - 'Tools/Pozyx/**'
-      - 'Tools/PrintVersion.py'
-      - 'Tools/completion/**'
-      - 'Tools/debug/**'
-      - 'Tools/environment_install/**'
-      - 'Tools/geotag/**'
-      - 'Tools/gittools/**'
-      - 'Tools/mavproxy_modules/**'
-      - 'Tools/simulink/**'
-      - 'Tools/vagrant/**'
-      - 'Tools/UDP_Proxy/**'
-      - 'Tools/Vicon/**'
-      # remove non SITL HAL
-      - 'libraries/AP_HAL_ChibiOS/**'
-      - 'libraries/AP_HAL_ESP32/**'
-      # Remove change on other workflows
-      - '.github/workflows/test_environment.yml'
   workflow_dispatch:
 
 concurrency:
@@ -127,7 +37,7 @@ jobs:
           NOW=$(date -u +"%F-%T")
           echo "timestamp=${NOW}" >> $GITHUB_OUTPUT
       - name: ccache cache files
-        uses: actions/cache@v3
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
         with:
           path: ~/.ccache
           key: ${{github.workflow}}-ccache-${{ matrix.toolchain }}-${{steps.ccache_cache_timestamp.outputs.timestamp}}
@@ -149,7 +59,7 @@ jobs:
           Tools/scripts/build_ci.sh
 
       - name: Archive buildlog artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: failure()
         with:
            name: fail-${{ matrix.toolchain }}-${{matrix.config}}

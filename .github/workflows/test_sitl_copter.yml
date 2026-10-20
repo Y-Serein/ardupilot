@@ -1,157 +1,6 @@
 name: test copter
 
 on:
-  push:
-    paths-ignore:
-      # remove other vehicles
-      - 'AntennaTracker/**'
-      - 'ArduPlane/**'
-      - 'ArduSub/**'
-      - 'Blimp/**'
-      - 'Rover/**'
-      # remove non SITL HAL
-      - 'libraries/AP_HAL_ChibiOS/**'
-      - 'libraries/AP_HAL_ESP32/**'
-      # remove non SITL directories
-      - 'Tools/AP_Bootloader/**'
-      - 'Tools/AP_Periph/**'
-      - 'Tools/bootloaders/**'
-      - 'Tools/CHDK-Script/**'
-      - 'Tools/CodeStyle/**'
-      - 'Tools/completion/**'
-      - 'Tools/CPUInfo/**'
-      - 'Tools/debug/**'
-      - 'Tools/environment_install/**'
-      - 'Tools/FilterTestTool/**'
-      - 'Tools/Frame_params/**'
-      - 'Tools/geotag/**'
-      - 'Tools/GIT_Test/**'
-      - 'Tools/gittools/**'
-      - 'Tools/Hello/**'
-      - 'Tools/IO_Firmware/**'
-      - 'Tools/Linux_HAL_Essentials/**'
-      - 'Tools/LogAnalyzer/**'
-      - 'Tools/Pozyx/**'
-      - 'Tools/PrintVersion.py'
-      - 'Tools/simulink/**'
-      - 'Tools/UDP_Proxy/**'
-      - 'Tools/vagrant/**'
-      - 'Tools/Vicon/**'
-      # Discard python file from Tools/scripts as not used
-      - 'Tools/scripts/**.py'
-      - 'Tools/scripts/build_sizes/**'
-      - 'Tools/scripts/build_tests/**'
-      - 'Tools/scripts/CAN/**'
-      - 'Tools/scripts/signing/**'
-      # Remove other vehicles autotest
-      - 'Tools/autotest/antennatracker.py'
-      - 'Tools/autotest/arduplane.py'
-      - 'Tools/autotest/ardusub.py'
-      - 'Tools/autotest/balancebot.py'
-      - 'Tools/autotest/location.txt'
-      - 'Tools/autotest/quadplane.py'
-      - 'Tools/autotest/rover.py'
-      - 'Tools/autotest/sailboat.py'
-      - 'Tools/autotest/swarminit.txt'
-      # Remove markdown files as irrelevant
-      - '**.md'
-      # Remove dotfile at root directory
-      - './.dir-locals.el'
-      - './.dockerignore'
-      - './.editorconfig'
-      - './.flake8'
-      - './.gitattributes'
-      - './.github'
-      - './.gitignore'
-      - './.pre-commit-config.yaml'
-      - './.pydevproject'
-      - './.valgrind-suppressions'
-      - './.valgrindrc'
-      - 'Dockerfile'
-      - 'Vagrantfile'
-      - 'Makefile'
-      # Remove some directories check
-      - '.vscode/**'
-      - '.github/ISSUE_TEMPLATE/**'
-      # Remove change on other workflows
-      - '.github/workflows/test_environment.yml'
-
-
-  pull_request:
-    paths-ignore:
-      # remove other vehicles
-      - 'AntennaTracker/**'
-      - 'ArduPlane/**'
-      - 'ArduSub/**'
-      - 'Blimp/**'
-      - 'Rover/**'
-      # remove non SITL HAL
-      - 'libraries/AP_HAL_ChibiOS/**'
-      - 'libraries/AP_HAL_ESP32/**'
-      # remove non SITL directories
-      - 'Tools/AP_Bootloader/**'
-      - 'Tools/AP_Periph/**'
-      - 'Tools/bootloaders/**'
-      - 'Tools/CHDK-Script/**'
-      - 'Tools/CodeStyle/**'
-      - 'Tools/completion/**'
-      - 'Tools/CPUInfo/**'
-      - 'Tools/debug/**'
-      - 'Tools/environment_install/**'
-      - 'Tools/FilterTestTool/**'
-      - 'Tools/Frame_params/**'
-      - 'Tools/geotag/**'
-      - 'Tools/GIT_Test/**'
-      - 'Tools/gittools/**'
-      - 'Tools/Hello/**'
-      - 'Tools/IO_Firmware/**'
-      - 'Tools/Linux_HAL_Essentials/**'
-      - 'Tools/LogAnalyzer/**'
-      - 'Tools/Pozyx/**'
-      - 'Tools/PrintVersion.py'
-      - 'Tools/simulink/**'
-      - 'Tools/UDP_Proxy/**'
-      - 'Tools/vagrant/**'
-      - 'Tools/Vicon/**'
-      # Discard python file from Tools/scripts as not used
-      - 'Tools/scripts/**.py'
-      - 'Tools/scripts/build_sizes/**'
-      - 'Tools/scripts/build_tests/**'
-      - 'Tools/scripts/CAN/**'
-      - 'Tools/scripts/signing/**'
-      # Remove other vehicles autotest
-      - 'Tools/autotest/antennatracker.py'
-      - 'Tools/autotest/arduplane.py'
-      - 'Tools/autotest/ardusub.py'
-      - 'Tools/autotest/balancebot.py'
-      - 'Tools/autotest/location.txt'
-      - 'Tools/autotest/quadplane.py'
-      - 'Tools/autotest/rover.py'
-      - 'Tools/autotest/sailboat.py'
-      - 'Tools/autotest/swarminit.txt'
-      # Remove markdown files as irrelevant
-      - '**.md'
-      # Remove dotfile at root directory
-      - './.dir-locals.el'
-      - './.dockerignore'
-      - './.editorconfig'
-      - './.flake8'
-      - './.gitattributes'
-      - './.github'
-      - './.gitignore'
-      - './.pre-commit-config.yaml'
-      - './.pydevproject'
-      - './.valgrind-suppressions'
-      - './.valgrindrc'
-      - 'Dockerfile'
-      - 'Vagrantfile'
-      - 'Makefile'
-      # Remove some directories check
-      - '.vscode/**'
-      - '.github/ISSUE_TEMPLATE/**'
-      # Remove change on other workflows
-      - '.github/workflows/test_environment.yml'
-
   workflow_dispatch:
 
 concurrency:
@@ -181,7 +30,7 @@ jobs:
           NOW=$(date -u +"%F-%T")
           echo "timestamp=${NOW}" >> $GITHUB_OUTPUT
       - name: ccache cache files
-        uses: actions/cache@v3
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
         with:
           path: ~/.ccache
           key: ${{github.workflow}}-ccache-${{ matrix.toolchain }}-${{steps.ccache_cache_timestamp.outputs.timestamp}}
@@ -252,7 +101,7 @@ jobs:
           Tools/scripts/build_ci.sh
 
       - name: Archive buildlog artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: failure()
         with:
            name: fail-${{matrix.config}}
@@ -266,7 +115,7 @@ jobs:
            retention-days: 14
 
       - name: Archive .bin artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
            name: BIN-${{matrix.config}}
            path: /__w/ardupilot/ardupilot/logs
@@ -289,7 +138,7 @@ jobs:
           NOW=$(date -u +"%F-%T")
           echo "timestamp=${NOW}" >> $GITHUB_OUTPUT
       - name: ccache cache files
-        uses: actions/cache@v3
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
         with:
           path: ~/.ccache
           key: ${{github.workflow}}-ccache-base-${{steps.ccache_cache_timestamp.outputs.timestamp}}
@@ -348,7 +197,7 @@ jobs:
           Tools/scripts/build_ci.sh
 
       - name: Archive buildlog artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: failure()
         with:
            name: fail-${{matrix.config}}
@@ -362,7 +211,7 @@ jobs:
            retention-days: 14
 
       - name: Archive .bin artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
            name: BIN-${{matrix.config}}
            path: /__w/ardupilot/ardupilot/logs

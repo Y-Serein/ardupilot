@@ -1,161 +1,111 @@
-# ArduPilot Project
+# ZHIER / ArduPilot
 
-<a href="https://ardupilot.org/discord"><img src="https://img.shields.io/discord/674039678562861068.svg" alt="Discord">
+面向 ZHIER 飞控的 ArduPilot 定制工程，基于 ArduCopter 4.5.7，维护板级配置、默认参数，以及既有 OpenMV 和自定义飞行模式。
 
-[![Test Copter](https://github.com/ArduPilot/ardupilot/workflows/test%20copter/badge.svg?branch=master)](https://github.com/ArduPilot/ardupilot/actions/workflows/test_sitl_copter.yml) [![Test Plane](https://github.com/ArduPilot/ardupilot/workflows/test%20plane/badge.svg?branch=master)](https://github.com/ArduPilot/ardupilot/actions/workflows/test_sitl_plane.yml) [![Test Rover](https://github.com/ArduPilot/ardupilot/workflows/test%20rover/badge.svg?branch=master)](https://github.com/ArduPilot/ardupilot/actions/workflows/test_sitl_rover.yml) [![Test Sub](https://github.com/ArduPilot/ardupilot/workflows/test%20sub/badge.svg?branch=master)](https://github.com/ArduPilot/ardupilot/actions/workflows/test_sitl_sub.yml) [![Test Tracker](https://github.com/ArduPilot/ardupilot/workflows/test%20tracker/badge.svg?branch=master)](https://github.com/ArduPilot/ardupilot/actions/workflows/test_sitl_tracker.yml)
+本仓库使用标准 MAVLink 协议，系统 ID 为 8 位。固件构建使用本仓库记录的固定依赖版本。
 
-[![Test AP_Periph](https://github.com/ArduPilot/ardupilot/workflows/test%20ap_periph/badge.svg?branch=master)](https://github.com/ArduPilot/ardupilot/actions/workflows/test_sitl_periph.yml) [![Test Chibios](https://github.com/ArduPilot/ardupilot/workflows/test%20chibios/badge.svg?branch=master)](https://github.com/ArduPilot/ardupilot/actions/workflows/test_chibios.yml) [![Test Linux SBC](https://github.com/ArduPilot/ardupilot/workflows/test%20Linux%20SBC/badge.svg?branch=master)](https://github.com/ArduPilot/ardupilot/actions/workflows/test_linux_sbc.yml) [![Test Replay](https://github.com/ArduPilot/ardupilot/workflows/test%20replay/badge.svg?branch=master)](https://github.com/ArduPilot/ardupilot/actions/workflows/test_replay.yml)
+- 项目仓库：<https://github.com/Y-Serein/ardupilot>
+- 上游项目：<https://github.com/ArduPilot/ardupilot>
+- 构建与测试：<https://github.com/Y-Serein/ardupilot/actions>
+- 主线：`main`；历史节点通过 `archive/*` 标签追溯。
 
-[![Test Unit Tests](https://github.com/ArduPilot/ardupilot/workflows/test%20unit%20tests/badge.svg?branch=master)](https://github.com/ArduPilot/ardupilot/actions/workflows/test_unit_tests.yml) [![test size](https://github.com/ArduPilot/ardupilot/actions/workflows/test_size.yml/badge.svg)](https://github.com/ArduPilot/ardupilot/actions/workflows/test_size.yml)
+## 维护范围
 
-[![Test Environment Setup](https://github.com/ArduPilot/ardupilot/actions/workflows/test_environment.yml/badge.svg?branch=master)](https://github.com/ArduPilot/ardupilot/actions/workflows/test_environment.yml)
+| 项目 | 内容 |
+| --- | --- |
+| 主线 | `main`；历史分支以 `archive/*` 标签保留 |
+| 整理基线 | `APM_Swarm-1.0.5`，提交 `27cb610d15b0d196af6bdd61a0ae571120e4b637` |
+| 固件版本 | 源码声明为 ArduCopter 4.5.7；旧分支名 `1.0.5` 不是上游固件版本 |
+| 目标硬件 | ZHIER；定义位于 `libraries/AP_HAL_ChibiOS/hwdef/ZHIER/` |
+| 仿真目标 | Copter SITL |
+| 构建依赖 | 以主仓库及嵌套子模块记录的提交为准，不跟随依赖分支的最新版本 |
 
-[![Cygwin Build](https://github.com/ArduPilot/ardupilot/actions/workflows/cygwin_build.yml/badge.svg)](https://github.com/ArduPilot/ardupilot/actions/workflows/cygwin_build.yml) [![Macos Build](https://github.com/ArduPilot/ardupilot/actions/workflows/macos_build.yml/badge.svg)](https://github.com/ArduPilot/ardupilot/actions/workflows/macos_build.yml)
+编译成功仅证明对应目标可构建。板级默认参数包含既有机型设置，使用固件前仍需核对实际硬件和参数；本次项目整理没有重新验证真实硬件或飞行行为。
 
-[![Coverity Scan Build Status](https://scan.coverity.com/projects/5331/badge.svg)](https://scan.coverity.com/projects/ardupilot-ardupilot)
+## 获取源码
 
-[![Test Coverage](https://github.com/ArduPilot/ardupilot/actions/workflows/test_coverage.yml/badge.svg?branch=master)](https://github.com/ArduPilot/ardupilot/actions/workflows/test_coverage.yml)
+```bash
+git clone --recurse-submodules --branch main https://github.com/Y-Serein/ardupilot.git
+cd ardupilot
+```
 
-[![Autotest Status](https://autotest.ardupilot.org/autotest-badge.svg)](https://autotest.ardupilot.org/)
+在干净的新克隆中，如子模块尚未下载，可运行：
 
-ArduPilot is the most advanced, full-featured, and reliable open source autopilot software available.
-It has been under development since 2010 by a diverse team of professional engineers, computer scientists, and community contributors.
-Our autopilot software is capable of controlling almost any vehicle system imaginable, from conventional airplanes, quad planes, multi-rotors, and helicopters to rovers, boats, balance bots, and even submarines.
-It is continually being expanded to provide support for new emerging vehicle types.
+```bash
+git submodule update --init --recursive
+```
 
-## The ArduPilot project is made up of: ##
+已有工作区先检查主仓库及子模块的未提交修改，不通过重置或更新依赖覆盖本地工作。
 
-- ArduCopter: [code](https://github.com/ArduPilot/ardupilot/tree/master/ArduCopter), [wiki](https://ardupilot.org/copter/index.html)
+## 原生构建
 
-- ArduPlane: [code](https://github.com/ArduPilot/ardupilot/tree/master/ArduPlane), [wiki](https://ardupilot.org/plane/index.html)
+Linux / WSL 构建需要 Python 3、ArduPilot 对应的 Python 依赖，以及 ZHIER 使用的 GCC Arm Embedded 10 工具链。CI 沿用 ArduPilot 的 `v0.1.3` 构建镜像；本地环境安装参考[上游构建说明](https://ardupilot.org/dev/docs/building-the-code.html)。
 
-- Rover: [code](https://github.com/ArduPilot/ardupilot/tree/master/Rover), [wiki](https://ardupilot.org/rover/index.html)
+下面直接调用项目自带 Waf。`python3 waf` 与原有 Waf 入口相同，也能避免 Windows 检出文件的换行符影响脚本首行。产品编译关闭测试，三类构建使用独立目录。
 
-- ArduSub : [code](https://github.com/ArduPilot/ardupilot/tree/master/ArduSub), [wiki](http://ardusub.com/)
+### ZHIER 主固件
 
-- Antenna Tracker : [code](https://github.com/ArduPilot/ardupilot/tree/master/AntennaTracker), [wiki](https://ardupilot.org/antennatracker/index.html)
+```bash
+python3 waf configure --board ZHIER --out=build/firmware --no-submodule-update --disable-tests --default-parameters=libraries/AP_HAL_ChibiOS/hwdef/ZHIER/defaults.parm
+python3 waf copter
+```
 
-## User Support & Discussion Forums ##
+产物：`build/firmware/ZHIER/bin/arducopter.bin`；同目录另有 Waf 正常生成的 `.apj` 等文件。
 
-- Support Forum: <https://discuss.ardupilot.org/>
+### ZHIER Bootloader
 
-- Community Site: <https://ardupilot.org>
+```bash
+python3 waf configure --board ZHIER --bootloader --out=build/bootloader --no-submodule-update --disable-tests
+python3 waf bootloader
+```
 
-## Developer Information ##
+产物：`build/bootloader/ZHIER/bin/AP_Bootloader.bin`。
 
-- Github repository: <https://github.com/ArduPilot/ardupilot>
+这条命令只编译，不覆盖 `Tools/bootloaders/ZHIER_bl.bin`。带 Bootloader 的 `.hex` 仍使用该归档文件；本项目日常上传的产物是分开的两个 bin。
 
-- Main developer wiki: <https://ardupilot.org/dev/>
+### Copter SITL
 
-- Developer discussion: <https://discuss.ardupilot.org>
+```bash
+python3 waf configure --board sitl --out=build/sitl-product --no-submodule-update --disable-tests
+python3 waf copter
+```
 
-- Developer chat: <https://discord.com/channels/ardupilot>
+产物：`build/sitl-product/sitl/bin/arducopter`。编译不会自动启动仿真。
 
-## Top Contributors ##
+## 独立测试
 
-- [Flight code contributors](https://github.com/ArduPilot/ardupilot/graphs/contributors)
-- [Wiki contributors](https://github.com/ArduPilot/ardupilot_wiki/graphs/contributors)
-- [Most active support forum users](https://discuss.ardupilot.org/u?order=post_count&period=quarterly)
-- [Partners who contribute financially](https://ardupilot.org/about/Partners)
+通用单元测试使用独立目录和 GitHub 手动工作流 `Copter unit tests`，不作为产品编译或固件上传的前置条件：
 
-## How To Get Involved ##
+```bash
+python3 waf configure --board sitl --out=build/unit-tests --no-submodule-update --debug
+python3 waf tests
+```
 
-- The ArduPilot project is open source and we encourage participation and code contributions: [guidelines for contributors to the ardupilot codebase](https://ardupilot.org/dev/docs/contributing.html)
+运行需要的测试可执行文件，例如：
 
-- We have an active group of Beta Testers to help us improve our code: [release procedures](https://ardupilot.org/dev/docs/release-procedures.html)
+```bash
+build/unit-tests/sitl/tests/test_math
+```
 
-- Desired Enhancements and Bugs can be posted to the [issues list](https://github.com/ArduPilot/ardupilot/issues).
+GitHub 工作流会运行该目录的全部测试可执行文件，分别记录编译及执行结果。通用测试覆盖软件逻辑，硬件与飞行验收单独进行。
 
-- Help other users with log analysis in the [support forums](https://discuss.ardupilot.org/)
+## GitHub Actions 与固件下载
 
-- Improve the wiki and chat with other [wiki editors on Discord #documentation](https://discord.com/channels/ardupilot)
+- `ZHIER firmware`：`main` 的代码推送、面向 `main` 的 PR 或手动触发；分别编译主固件与 Bootloader。
+- `Copter SITL build`：同样的触发方式，只编译 SITL。
+- `Copter unit tests`：手动触发，独立编译并运行通用测试。
+- 继承的其他平台工作流保留手动入口，关闭推送、PR 和定时自动触发；未将这些旧平台列为本项目已验证目标。
 
-- Contact the developers on one of the [communication channels](https://ardupilot.org/copter/docs/common-contact-us.html)
+在 [Actions](https://github.com/Y-Serein/ardupilot/actions) 中进入成功的 `ZHIER firmware` 运行，从 **Artifacts** 下载包含提交 SHA 和运行编号的产物包。包内只保存同次构建的 `arducopter.bin`、`AP_Bootloader.bin`，保留 **30 天**；提交、编译器、子模块版本和两个文件的 SHA256 写入该次运行摘要。
 
-## License ##
+每天两至三次构建、每次合计不超过 4 MB，30 天约占 240–360 MB。账号下其他构建产物和 Packages 仍需计入共享额度。没有配置固定每日构建，也不会自动创建 Release、上传设备或刷写固件。
 
-The ArduPilot project is licensed under the GNU General Public
-License, version 3.
+## 版本管理
 
-- [Overview of license](https://ardupilot.org/dev/docs/license-gplv3.html)
+日常修改围绕 `main`，确有需要时建立短期功能分支，合入后清理。历史节点用标签定位，正式发布时再创建版本标签与 Release；不改写上游历史，不把旧分支名称当作验证等级。
 
-- [Full Text](https://github.com/ArduPilot/ardupilot/blob/master/COPYING.txt)
+`archive/APM_Swarm-1.0.4` 保留的 OpenMV/降落及参数编号变更没有合入当前基线；`archive/APM_Swarm-0.0.1` 保留早期高度消息和仿真位置记录。需要恢复这些功能时单独审查和验证。
 
-## Maintainers ##
+## 许可证与上游归属
 
-ArduPilot is comprised of several parts, vehicles and boards. The list below
-contains the people that regularly contribute to the project and are responsible
-for reviewing patches on their specific area.
-
-- [Andrew Tridgell](https://github.com/tridge):
-  - ***Vehicle***: Plane, AntennaTracker
-  - ***Board***: Pixhawk, Pixhawk2, PixRacer
-- [Francisco Ferreira](https://github.com/oxinarf):
-  - ***Bug Master***
-- [Grant Morphett](https://github.com/gmorph):
-  - ***Vehicle***: Rover
-- [Willian Galvani](https://github.com/williangalvani):
-  - ***Vehicle***: Sub
-- [Lucas De Marchi](https://github.com/lucasdemarchi):
-  - ***Subsystem***: Linux
-- [Michael du Breuil](https://github.com/WickedShell):
-  - ***Subsystem***: Batteries
-  - ***Subsystem***: GPS
-  - ***Subsystem***: Scripting
-- [Peter Barker](https://github.com/peterbarker):
-  - ***Subsystem***: DataFlash, Tools
-- [Randy Mackay](https://github.com/rmackay9):
-  - ***Vehicle***: Copter, Rover, AntennaTracker
-- [Siddharth Purohit](https://github.com/bugobliterator):
-  - ***Subsystem***: CAN, Compass
-  - ***Board***: Cube*
-- [Tom Pittenger](https://github.com/magicrub):
-  - ***Vehicle***: Plane
-- [Bill Geyer](https://github.com/bnsgeyer):
-  - ***Vehicle***: TradHeli
-- [Emile Castelnuovo](https://github.com/emilecastelnuovo):
-  - ***Board***: VRBrain
-- [Georgii Staroselskii](https://github.com/staroselskii):
-  - ***Board***: NavIO
-- [Gustavo José de Sousa](https://github.com/guludo):
-  - ***Subsystem***: Build system
-- [Julien Beraud](https://github.com/jberaud):
-  - ***Board***: Bebop & Bebop 2
-- [Leonard Hall](https://github.com/lthall):
-  - ***Subsystem***: Copter attitude control and navigation
-- [Matt Lawrence](https://github.com/Pedals2Paddles):
-  - ***Vehicle***: 3DR Solo & Solo based vehicles
-- [Matthias Badaire](https://github.com/badzz):
-  - ***Subsystem***: FRSky
-- [Mirko Denecke](https://github.com/mirkix):
-  - ***Board***: BBBmini, BeagleBone Blue, PocketPilot
-- [Paul Riseborough](https://github.com/priseborough):
-  - ***Subsystem***: AP_NavEKF2
-  - ***Subsystem***: AP_NavEKF3
-- [Víctor Mayoral Vilches](https://github.com/vmayoral):
-  - ***Board***: PXF, Erle-Brain 2, PXFmini
-- [Amilcar Lucas](https://github.com/amilcarlucas):
-  - ***Subsystem***: Marvelmind
-- [Samuel Tabor](https://github.com/samuelctabor):
-  - ***Subsystem***: Soaring/Gliding
-- [Henry Wurzburg](https://github.com/Hwurzburg):
-  - ***Subsystem***: OSD
-  - ***Site***: Wiki
-- [Peter Hall](https://github.com/IamPete1):
-  - ***Vehicle***: Tailsitters
-  - ***Vehicle***: Sailboat
-  - ***Subsystem***: Scripting
-- [Andy Piper](https://github.com/andyp1per):
-  - ***Subsystem***: Crossfire
-  - ***Subsystem***: ESC
-  - ***Subsystem***: OSD
-  - ***Subsystem***: SmartAudio
-- [Alessandro Apostoli ](https://github.com/yaapu):
-  - ***Subsystem***: Telemetry
-  - ***Subsystem***: OSD
-- [Rishabh Singh ](https://github.com/rishabsingh3003):
-  - ***Subsystem***: Avoidance/Proximity
-- [David Bussenschutt ](https://github.com/davidbuzz):
-  - ***Subsystem***: ESP32,AP_HAL_ESP32
-- [Charles Villard ](https://github.com/Silvanosky):
-  - ***Subsystem***: ESP32,AP_HAL_ESP32
+本项目基于 ArduPilot，沿用 [GNU GPL v3](COPYING.txt)。原始版权声明、作者信息、源码历史和许可证保持不变。ArduPilot 的上游平台能力及官方测试结果不代表本定制版本已经通过相同验收。
